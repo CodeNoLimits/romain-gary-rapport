@@ -39,7 +39,7 @@ function ecrire(k,v){try{localStorage.setItem('rg_'+k,v)}catch(e){}}
 const E=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const O=['Diplomatique','Avocat','Notaire','Comptable','Conseil fiscal','Architecte','Ingénieur','Assurance','Bureaux / société','Immobilier','Association','Agence de voyage','Banque','Médical'];
 function etat(){const n=Object.keys(att).length,e=document.getElementById('etat');e.className=n?'bad':'';e.textContent=n?n+' à enregistrer…':'Enregistré'}
-function compte(){const f=A.filter(a=>F[a.i]).length;document.getElementById('comp').textContent=f+' faits sur '+A.length;document.getElementById('pr').style.width=(A.length?100*f/A.length:0)+'%'}
+function compte(){const f=A.filter(a=>F[a.i]).length;document.getElementById('comp').textContent=f+(f>1?' faits':' fait')+' sur '+A.length;document.getElementById('pr').style.width=(A.length?100*f/A.length:0)+'%'}
 async function pousser(){for(const [id,v] of Object.entries(att)){try{const r=v?await fetch(COL+'/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:{d:{stringValue:v}}})}):await fetch(COL+'/'+id,{method:'DELETE'});if(!r.ok)throw 0;delete att[id]}catch(e){break}}ecrire('att',JSON.stringify(att));etat()}
 async function tirer(){let t='',N={};try{do{const r=await fetch(COL+'?pageSize=300'+(t?'&pageToken='+t:''));if(!r.ok)throw 0;const j=await r.json();(j.documents||[]).forEach(d=>N[d.name.split('/').pop()]=d.fields.d.stringValue);t=j.nextPageToken||''}while(t)}catch(e){document.getElementById('etat').className='bad';document.getElementById('etat').textContent='Hors ligne';return}
 for(const[id,v]of Object.entries(att)){if(v)N[id]=v;else delete N[id]}
