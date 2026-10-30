@@ -1,0 +1,62 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Romain Gary · Tournée</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Frank+Ruhl+Libre:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0d0e13;--ink2:#17181f;--line:#2a2b33;--cream:#f4ede0;--gold:#c9a45c;--gold2:#e7cf98;--muted:#a79a82;--red:#e06a5a}
+*{box-sizing:border-box;margin:0}html,body{background:var(--ink);color:var(--cream);font:300 17px/1.45 'Frank Ruhl Libre',Georgia,serif}
+header{position:sticky;top:0;z-index:5;background:rgba(13,14,19,.96);padding:14px 16px 12px;border-bottom:1px solid var(--line)}
+.brand{font:600 20px 'Cormorant Garamond',serif;letter-spacing:.3em;color:var(--gold2)}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:6px;font-size:15px;color:var(--muted)}
+#etat.bad{color:var(--red)}
+.bar{height:3px;background:var(--line);margin-top:8px}.bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
+main{max-width:760px;margin:0 auto;padding:12px 16px 80px}
+input[type=search]{width:100%;padding:12px 14px;background:var(--ink2);border:1px solid var(--line);color:var(--cream);font:inherit;border-radius:2px}
+.vues{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}
+.vues button{flex:1 1 auto;min-height:44px;padding:0 12px;background:none;border:1px solid var(--line);color:var(--muted);font:inherit;font-size:15px;border-radius:2px}
+.vues button.on{border-color:var(--gold);color:var(--gold2)}
+details{border-top:1px solid var(--line)}details:last-of-type{border-bottom:1px solid var(--line)}
+summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:54px;padding:8px 2px;font-weight:500;font-size:19px;cursor:pointer}
+summary::-webkit-details-marker{display:none}summary b{font:300 15px 'Frank Ruhl Libre',serif;color:var(--muted);white-space:nowrap}
+summary:after{content:'+';color:var(--gold);font-size:22px;margin-inline-start:6px}details[open] summary:after{content:'−'}
+.it{display:flex;gap:12px;padding:12px 0;border-top:1px solid #1e1f27}
+.it label{flex:0 0 44px;height:44px;display:flex;align-items:center;justify-content:center}
+.it input{appearance:none;width:28px;height:28px;border:1.5px solid var(--gold);border-radius:2px;background:none}
+.it input:checked{background:var(--gold)}.it input:checked:after{content:'✓';display:block;text-align:center;color:var(--ink);font-weight:700;line-height:26px}
+.it.fait .n{opacity:.5;text-decoration:line-through}.c{flex:1;min-width:0}.n{font-weight:500;overflow-wrap:anywhere}
+.m{font-size:14.5px;color:var(--muted);overflow-wrap:anywhere}.x{font-size:14px;color:var(--gold2)}
+.ac{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.ac a{min-height:38px;display:inline-flex;align-items:center;padding:0 12px;border:1px solid var(--line);color:var(--cream);text-decoration:none;font-size:14.5px;border-radius:2px}
+.vide{padding:30px 0;color:var(--muted);text-align:center}
+</style></head><body>
+<header><div class="brand">ROMAIN GARY</div><div class="row"><span id="comp">Chargement…</span><span id="etat"></span></div><div class="bar"><i id="pr"></i></div></header>
+<main><input id="q" type="search" placeholder="Chercher un nom, une rue, un mail…" aria-label="Chercher">
+<div class="vues"><button data-v="cat" class="on">Par catégorie</button><button data-v="rue">Par rue</button><button data-v="pied">À pied, moins de 800 m</button><button id="cacher">Masquer les faits</button></div>
+<div id="l"></div></main>
+<script>
+const COL='https://firestore.googleapis.com/v1/projects/dreamnova-tribu-auth/databases/(default)/documents/rgprosp_84ab4ddae471a6b0';
+let A=[],F={},vue='cat',cacher=false,ouv=new Set(['Avocat']);
+let att=JSON.parse(lire('att')||'{}');
+function lire(k){try{return localStorage.getItem('rg_'+k)}catch(e){return null}}
+function ecrire(k,v){try{localStorage.setItem('rg_'+k,v)}catch(e){}}
+const E=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const O=['Diplomatique','Avocat','Notaire','Comptable','Conseil fiscal','Architecte','Ingénieur','Assurance','Bureaux / société','Immobilier','Association','Agence de voyage','Banque','Médical'];
+function etat(){const n=Object.keys(att).length,e=document.getElementById('etat');e.className=n?'bad':'';e.textContent=n?n+' à enregistrer…':'Enregistré'}
+function compte(){const f=A.filter(a=>F[a.i]).length;document.getElementById('comp').textContent=f+' faits sur '+A.length;document.getElementById('pr').style.width=(A.length?100*f/A.length:0)+'%'}
+async function pousser(){for(const [id,v] of Object.entries(att)){try{const r=v?await fetch(COL+'/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:{d:{stringValue:v}}})}):await fetch(COL+'/'+id,{method:'DELETE'});if(!r.ok)throw 0;delete att[id]}catch(e){break}}ecrire('att',JSON.stringify(att));etat()}
+async function tirer(){let t='',N={};try{do{const r=await fetch(COL+'?pageSize=300'+(t?'&pageToken='+t:''));if(!r.ok)throw 0;const j=await r.json();(j.documents||[]).forEach(d=>N[d.name.split('/').pop()]=d.fields.d.stringValue);t=j.nextPageToken||''}while(t)}catch(e){document.getElementById('etat').className='bad';document.getElementById('etat').textContent='Hors ligne';return}
+for(const[id,v]of Object.entries(att)){if(v)N[id]=v;else delete N[id]}
+if(JSON.stringify(N)!==JSON.stringify(F)){F=N;ecrire('faits',JSON.stringify(F));rendre()}compte();etat()}
+function cocher(id,on){if(on)F[id]=new Date().toLocaleDateString('fr-FR');else delete F[id];att[id]=on?F[id]:'';ecrire('att',JSON.stringify(att));ecrire('faits',JSON.stringify(F));const el=document.querySelector('[data-i="'+id+'"]');if(el){el.classList.toggle('fait',on);const s=el.querySelector('.f');if(s)s.textContent=on?'Fait le '+F[id]:''}maj();compte();etat();pousser()}
+function maj(){document.querySelectorAll('details').forEach(d=>{const g=G[d.dataset.g]||[];d.querySelector('b').textContent=g.filter(a=>F[a.i]).length+' / '+g.length})}
+function ligne(a){const q=encodeURIComponent(a.n+' '+a.a+' ירושלים');return '<div class="it'+(F[a.i]?' fait':'')+'" data-i="'+a.i+'"><label><input type="checkbox" aria-label="Fait" '+(F[a.i]?'checked':'')+'></label><div class="c"><div class="n" dir="auto">'+E(a.n)+'</div><div class="m"><span dir="auto">'+E(a.a)+'</span> · '+a.d+' m · '+E(a.c)+' <span class="f">'+(F[a.i]?'Fait le '+E(F[a.i]):'')+'</span></div>'+(a.x?'<div class="x">'+E(a.x)+'</div>':'')+'<div class="ac">'+(a.t?'<a href="tel:'+E(a.t.replace(/-/g,''))+'">Appeler</a>':'')+(a.m?'<a href="mailto:'+E(a.m)+'">Mail</a>':'')+'<a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+q+'">Plan</a>'+(a.s?'<a target="_blank" rel="noopener" href="'+E(a.s)+'">Site</a>':'')+'</div></div></div>'}
+let G={};
+function rendre(){const q=document.getElementById('q').value.trim().toLowerCase();let L=A.filter(a=>(!cacher||!F[a.i])&&(!q||(a.n+' '+a.a+' '+a.m+' '+a.c).toLowerCase().includes(q)));if(vue==='pied')L=L.filter(a=>a.d<=800);G={};L.forEach(a=>{const k=vue==='cat'?a.c:(a.r||'Sans rue');(G[k]=G[k]||[]).push(a)});
+const K=Object.keys(G).sort((x,y)=>vue==='cat'?O.indexOf(x)-O.indexOf(y):G[y].length-G[x].length);
+K.forEach(k=>G[k].sort((x,y)=>vue==='cat'?x.d-y.d:(parseInt(x.a.replace(/\D+/,''))||0)-(parseInt(y.a.replace(/\D+/,''))||0)));
+document.getElementById('l').innerHTML=K.length?K.map(k=>{const o=q||ouv.has(k);return '<details data-g="'+E(k)+'"'+(o?' open':'')+'><summary><span dir="auto">'+E(k)+'</span><b>'+G[k].filter(a=>F[a.i]).length+' / '+G[k].length+'</b></summary><div class="b">'+(o?G[k].map(ligne).join(''):'')+'</div></details>'}).join(''):'<div class="vide">Aucune adresse.</div>'}
+document.getElementById('l').addEventListener('toggle',e=>{const d=e.target,k=d.dataset.g;if(d.open){ouv.add(k);const b=d.querySelector('.b');if(!b.innerHTML)b.innerHTML=G[k].map(ligne).join('')}else ouv.delete(k)},true);
+document.getElementById('l').addEventListener('change',e=>{if(e.target.type==='checkbox')cocher(e.target.closest('.it').dataset.i,e.target.checked)});
+document.getElementById('q').addEventListener('input',rendre);
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{vue=b.dataset.v;document.querySelectorAll('[data-v]').forEach(x=>x.classList.toggle('on',x===b));rendre()});
+document.getElementById('cacher').onclick=e=>{cacher=!cacher;e.target.classList.toggle('on',cacher);rendre()};
+F=JSON.parse(lire('faits')||'{}');
+fetch('data.json').then(r=>r.json()).then(j=>{A=j;rendre();compte();etat();pousser().then(tirer);setInterval(()=>{pousser().then(tirer)},30000)});
+</script></body></html>
