@@ -21,9 +21,10 @@
   --gold: #c9a45c;
   --gold-light: #e7cf98;
   --muted: #b8aa91;
+  --reggae-red: #b83b2b;
   --reggae-warm: #d99b3c;
-  --reggae-green: #3b7a57;
-  --border: rgba(201, 164, 92, 0.32);
+  --reggae-green: #2e6f40;
+  --border: rgba(201, 164, 92, 0.34);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; overflow-x: hidden; background: var(--ink); color: var(--cream); }
@@ -100,14 +101,16 @@ bdi { white-space: nowrap; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: sepia(0.22) brightness(0.54) contrast(1.08);
+  object-position: center 40%;
+  filter: brightness(0.68) contrast(1.08) saturate(1.14);
+  transform: scale(1.02);
 }
 .hero-veil {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(90% 70% at 50% 30%, rgba(217,155,60,0.14) 0%, rgba(11,11,14,0.45) 65%, rgba(11,11,14,0.94) 100%),
-    linear-gradient(180deg, rgba(11,11,14,0.55) 0%, rgba(11,11,14,0.15) 35%, rgba(11,11,14,0.88) 78%, var(--ink) 100%);
+    radial-gradient(75% 65% at 25% 35%, rgba(184,59,43,0.18) 0%, rgba(217,155,60,0.14) 45%, rgba(46,111,64,0.14) 75%, transparent 100%),
+    linear-gradient(180deg, rgba(11,11,14,0.52) 0%, rgba(11,11,14,0.18) 38%, rgba(11,11,14,0.86) 80%, var(--ink) 100%);
 }
 .hero-inner {
   position: relative;
@@ -137,7 +140,7 @@ bdi { white-space: nowrap; }
   content: "";
   width: 48px;
   height: 1px;
-  background: var(--gold);
+  background: linear-gradient(90deg, var(--reggae-red), var(--gold-light), var(--reggae-green));
 }
 .hero h1 {
   font-size: clamp(44px, 9.5vw, 96px);
@@ -145,7 +148,7 @@ bdi { white-space: nowrap; }
   line-height: 0.98;
   margin: 14px 0 18px;
   color: var(--cream);
-  text-shadow: 0 8px 36px rgba(0,0,0,0.65);
+  text-shadow: 0 8px 36px rgba(0,0,0,0.72);
 }
 .hero h1 em {
   font-style: normal;
@@ -164,7 +167,7 @@ bdi { white-space: nowrap; }
   gap: 8px;
   padding: 9px 18px;
   border: 1px solid var(--gold);
-  background: rgba(20, 19, 24, 0.78);
+  background: rgba(20, 19, 24, 0.82);
   color: var(--gold-light);
   font-size: 16px;
   font-weight: 500;
@@ -215,7 +218,7 @@ bdi { white-space: nowrap; }
   align-items: center;
   gap: 8px;
   padding: 12px 20px;
-  background: rgba(20,19,24,0.75);
+  background: rgba(20,19,24,0.78);
   border: 1px solid var(--border);
   color: var(--cream);
   font-size: 14px;
@@ -244,14 +247,14 @@ bdi { white-space: nowrap; }
   color: var(--gold-light);
 }
 .sec-orn {
-  width: 80px;
-  height: 1px;
-  background: var(--gold);
+  width: 96px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--reggae-red), var(--gold-light), var(--reggae-green));
   margin: 14px auto 0;
-  position: relative;
+  border-radius: 2px;
 }
 
-/* Cards */
+/* Cards & Visual Gallery */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -267,14 +270,14 @@ bdi { white-space: nowrap; }
 }
 .card-media {
   position: relative;
-  height: 220px;
+  height: 230px;
   overflow: hidden;
 }
 .card-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: sepia(0.15) brightness(0.84);
+  filter: brightness(0.94) contrast(1.05) saturate(1.08);
   transition: transform 0.6s ease;
 }
 .card:hover .card-media img { transform: scale(1.05); }
@@ -282,7 +285,7 @@ bdi { white-space: nowrap; }
   position: absolute;
   top: 14px;
   right: 14px;
-  background: rgba(11,11,14,0.82);
+  background: rgba(11,11,14,0.84);
   border: 1px solid var(--gold);
   color: var(--gold-light);
   font-family: 'Cormorant Garamond', serif;
@@ -299,6 +302,36 @@ bdi { white-space: nowrap; }
   margin-bottom: 10px;
 }
 .card-body p { color: #d8ccb8; font-size: 16px; font-weight: 300; }
+
+.gallery-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+.gallery-item {
+  position: relative;
+  height: 220px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.gallery-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(231, 207, 152, 0.14);
+  pointer-events: none;
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.95) contrast(1.06) saturate(1.1);
+  transition: transform 0.6s ease;
+}
+.gallery-item:hover img { transform: scale(1.05); }
 
 /* 3 Steps */
 .steps-grid {
@@ -416,7 +449,7 @@ input:focus, select:focus, textarea:focus {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: rgba(59, 122, 87, 0.16);
+  background: rgba(46, 111, 64, 0.18);
   border: 1px solid rgba(201, 164, 92, 0.45);
   border-radius: 10px;
   font-size: 16px;
@@ -479,7 +512,8 @@ footer {
 </header>
 
 <section class="hero">
-  <video class="hero-bg" id="heroVideo" autoplay muted loop playsinline poster="../assets/hero-1920.webp" src="../assets/REGGAE_HE.mp4"></video>
+  <img class="hero-bg" src="../assets/reggae-scene-soir.webp" alt="ערב רגאיי ברומן גארי — מוזיקה חיה בירושלים" fetchpriority="high">
+  <audio id="heroAudio" loop preload="none" src="../assets/REGGAE_HE.mp4"></audio>
   <div class="hero-veil"></div>
   <div class="hero-inner">
     <div class="inst-line">קפה ביסטרו רומן גארי · המכון הצרפתי בירושלים · רחוב הלל 35, ירושלים</div>
@@ -504,15 +538,22 @@ footer {
     <div class="sec-orn"></div>
   </div>
   <div class="cards-grid"><article class="card">
-          <div class="card-media"><img src="../assets/bar-1400.webp" alt="מוזיקת רגאיי חיה" loading="lazy"><span class="card-num">01</span></div>
+          <div class="card-media"><img src="../assets/reggae-basse-live.webp" alt="מוזיקת רגאיי חיה — הופעה חיה ואנרגיה חמה בחלל האינטימי של המכון הצרפתי ע״ש רומן גארי בלב ירושלים" loading="lazy"><span class="card-num">01</span></div>
           <div class="card-body"><h3>מוזיקת רגאיי חיה</h3><p>הופעה חיה ואנרגיה חמה בחלל האינטימי של המכון הצרפתי ע״ש רומן גארי בלב ירושלים.</p></div>
         </article><article class="card">
-          <div class="card-media"><img src="../assets/salle-1400.webp" alt="מטבח ביסטרו צרפתי" loading="lazy"><span class="card-num">02</span></div>
+          <div class="card-media"><img src="../assets/salle-bistro-reel.webp" alt="מטבח ביסטרו צרפתי — קפה ביסטרו רומן גארי · המכון הצרפתי בירושלים · רחוב הלל 35, ירושלים" loading="lazy"><span class="card-num">02</span></div>
           <div class="card-body"><h3>מטבח ביסטרו צרפתי</h3><p>תפריט ערב חלבי מוקפד, מנות ביסטרו קלאסיות ומשקאות חמים וקלים — כשר למהדרין.</p></div>
         </article><article class="card">
-          <div class="card-media"><img src="../assets/salon-900.webp" alt="אווירה פריזאית־ירושלמית" loading="lazy"><span class="card-num">03</span></div>
+          <div class="card-media"><img src="../assets/reggae-public-guirlandes.webp" alt="אווירה פריזאית־ירושלמית — מפגש תרבותי ומוזיקלי בפינה שקטה ואלגנטית במרכז העיר, ברחוב הלל 35" loading="lazy"><span class="card-num">03</span></div>
           <div class="card-body"><h3>אווירה פריזאית־ירושלמית</h3><p>מפגש תרבותי ומוזיקלי בפינה שקטה ואלגנטית במרכז העיר, ברחוב הלל 35.</p></div>
         </article></div>
+  <div class="gallery-grid"><figure class="gallery-item">
+          <img src="../assets/reggae-percussions-micro.webp" alt="מוזיקה חיה בירושלים — ערב רגאיי ברומן גארי" loading="lazy">
+        </figure><figure class="gallery-item">
+          <img src="../assets/reggae-soundsystem.webp" alt="החצר והסלון של הביסטרו הפריזאי ברחוב הלל 35 מתמלאים במקצבי רגאיי חמים" loading="lazy">
+        </figure><figure class="gallery-item">
+          <img src="../assets/reggae-scene-soir.webp" alt="ערב רגאיי ברומן גארי · יום ראשון 15 בנובמבר 2026 · רחוב הלל 35, ירושלים" loading="lazy">
+        </figure></div>
 </section>
 
 <section class="section" style="padding-top:10px">
@@ -594,15 +635,24 @@ footer {
 
 <script>
 (function(){
-  const vid = document.getElementById('heroVideo');
+  const aud = document.getElementById('heroAudio');
   const sBtn = document.getElementById('soundBtn');
   const sTxt = document.getElementById('soundTxt');
   const soundOn = "\u05d4\u05e4\u05e2\u05dc\u05ea \u05e1\u05d0\u05d5\u05e0\u05d3";
   const soundOff = "\u05d4\u05e9\u05ea\u05e7\u05ea \u05e1\u05d0\u05d5\u05e0\u05d3";
+  let playing = false;
   sBtn.addEventListener('click', function(){
-    vid.muted = !vid.muted;
-    if(!vid.muted) { vid.play().catch(()=>{}); sBtn.firstChild.textContent = '🔊 '; sTxt.textContent = soundOff; }
-    else { sBtn.firstChild.textContent = '🔇 '; sTxt.textContent = soundOn; }
+    if(!playing) {
+      aud.play().catch(()=>{});
+      playing = true;
+      sBtn.firstChild.textContent = '🔊 ';
+      sTxt.textContent = soundOff;
+    } else {
+      aud.pause();
+      playing = false;
+      sBtn.firstChild.textContent = '🔇 ';
+      sTxt.textContent = soundOn;
+    }
   });
 
   const copyBtn = document.getElementById('copyBtn');
